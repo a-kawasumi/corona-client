@@ -1,13 +1,14 @@
-import React, { useEffect } from 'react'
-import { useApi } from '../../hooks/api'
+import React from 'react'
+import { usePatient } from '../../hooks/usePatient'
+import { PatientGraph } from '../../components/PatientGraph'
 
 export const Home: React.VFC = () => {
-	const { getPatients } = useApi()
-	useEffect(() => {
-		getPatients()
-	}, [getPatients])
+	const { graphData } = usePatient()
 
 	return (
-		<div>hello home</div>
+		<div>
+			<h1>hello home</h1>
+			{graphData && <PatientGraph data={graphData.options} categories={graphData.categories} />}
+		</div>
 	)
 }

@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 import { Prefecture, Api, Patient } from '../types'
 
-const BASE_URL = process.env.REACT_APP_BASE_URL
+const BASE_URL = "http://127.0.0.1:3000/"
 const MODE: RequestMode = 'cors'
 const OPTIONS: RequestInit = {
 	method: 'GET',
@@ -13,10 +13,11 @@ const OPTIONS: RequestInit = {
 
 type PrefecturesApi = Api<Prefecture[]>
 
-type PatientsApi = Api<{
+export interface PatientsData {
 	patients: Patient[]
 	prefecture: Prefecture
-}>
+}
+export type PatientsApi = Api<PatientsData>
 
 export const useApi = () => {
 	const getPrefectures = useCallback(async() => {
@@ -28,6 +29,7 @@ export const useApi = () => {
 	}, [])
 
 	const getPatients = useCallback(async() => {
+		// todo: query
 		const data: PatientsApi = await fetch(`${BASE_URL}/patients?pref_id=1&date_from=20211201&date_to=20211231`, OPTIONS).then(res => res.json()).then(data => data).catch((err: Error) => {
 			console.error("エラー: ", err)
 		})
