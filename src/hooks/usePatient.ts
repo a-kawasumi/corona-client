@@ -3,6 +3,7 @@ import { useApi, PatientsData, GetQueries } from "./useApi";
 import { SeriesOptionsType } from "highcharts";
 import uniq from "lodash.uniq";
 import { useMount } from "./useMount";
+import { Patient } from "../types";
 
 export const usePatient = () => {
   const { getPatients } = useApi();
@@ -13,8 +14,32 @@ export const usePatient = () => {
     async (queries: GetQueries) => {
       const body = await getPatients(queries);
       if (body.ok && isMounted()) {
-        const patients = body.data.patients;
-        if (patients != null) setPatient(body.data);
+        const prefecture = body.data.prefecture;
+        // todo: 暫定措置 apiで重複があるので修正する
+        const patients = body.data.patients.reduce(
+          (previousValue: Patient[], currentValue) => {
+            const isTarget = prefecture.id === currentValue.prefecture_id;
+            if (!isTarget) {
+              return previousValue;
+            }
+            const isFirst = previousValue.length === 0;
+            const isUniq = previousValue.every(
+              (prev) => prev.id !== currentValue.id
+            );
+            if (isUniq || isFirst) {
+              previousValue.push(currentValue);
+            }
+            return previousValue;
+          },
+          []
+        );
+        if (patients != null)
+          setPatient({
+            patients,
+            prefecture,
+          });
+      } else {
+        console.error(body.message);
       }
     },
     [getPatients, isMounted]

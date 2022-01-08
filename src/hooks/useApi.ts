@@ -31,7 +31,7 @@ export const useApi = () => {
       .then((res) => res.json())
       .then((data) => data)
       .catch((err: Error) => {
-        console.error("エラー: ", err);
+        console.error("エラー: ", err.message);
       });
   }, []);
 
