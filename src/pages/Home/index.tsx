@@ -1,19 +1,20 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { usePatient } from "../../hooks/usePatient";
 import { PatientGraph } from "../../components/PatientGraph";
 import { JapanMap } from "../../components/JapanMap";
 import styled from "styled-components";
 import { DateRangeCalender } from "../../components/DateRangeCalender";
+import { useOutsideClick } from "../../hooks/useOutsideClick";
 
 const Selector = styled.div`
-  display: flex;
+  margin: 50px 0;
 `;
 
 const Graph = styled.div`
   position: relative;
 `;
 
-const StyledDateRangeCalender = styled(DateRangeCalender)`
+const Calender = styled.div`
   position: absolute;
   top: 0;
   right: 200px;
@@ -21,8 +22,12 @@ const StyledDateRangeCalender = styled(DateRangeCalender)`
 `;
 
 export const Home: React.VFC = () => {
+  const calenderRef = useRef<HTMLDivElement>(null);
   const { graphData, fetchPatients } = usePatient();
   const [isShowDateRange, setIsShowDateRange] = useState(false);
+  useOutsideClick<HTMLDivElement>(calenderRef, () => {
+    setIsShowDateRange(false);
+  });
 
   const handleSelect = useCallback(
     (id: number) => {
@@ -38,20 +43,17 @@ export const Home: React.VFC = () => {
 
   useEffect(() => {
     const dateEl = document.querySelector(".highcharts-subtitle");
-    console.log(dateEl);
     if (!dateEl) return;
     // @ts-expect-error
     dateEl.style.cursor = "pointer";
-    const show = () => setIsShowDateRange(true);
-    const close = () => setIsShowDateRange(false);
-    const click = (event: MouseEvent) => {
-      const inside = dateEl.contains(event.target as Node);
-      if (!inside) close();
+    const show = (event: Event) => {
+      event.stopPropagation();
+      event.preventDefault();
+      setIsShowDateRange(true);
     };
-    document.addEventListener("click", click);
+
     dateEl.addEventListener("click", show);
     return () => {
-      document.removeEventListener("click", click);
       dateEl.removeEventListener("click", show);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -69,7 +71,11 @@ export const Home: React.VFC = () => {
             categories={graphData.categories}
           />
         )}
-        {isShowDateRange && <StyledDateRangeCalender />}
+        {isShowDateRange && (
+          <Calender ref={calenderRef}>
+            <DateRangeCalender />
+          </Calender>
+        )}
       </Graph>
     </div>
   );
