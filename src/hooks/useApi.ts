@@ -19,32 +19,37 @@ export interface PatientsData {
 }
 export type PatientsApi = Api<PatientsData>;
 
+export interface GetQueries {
+  prefId: number;
+  dateFrom: string;
+  dateTo: string;
+}
+
 export const useApi = () => {
-  const getPrefectures = useCallback(async () => {
-    const data: PrefecturesApi = await fetch(`${BASE_URL}/prefectures`, OPTIONS)
+  const request = useCallback((url: string) => {
+    return fetch(url, OPTIONS)
       .then((res) => res.json())
       .then((data) => data)
       .catch((err: Error) => {
         console.error("エラー: ", err);
       });
-    console.log(data);
-    return data;
   }, []);
 
-  const getPatients = useCallback(async () => {
-    // todo: query
-    const data: PatientsApi = await fetch(
-      `${BASE_URL}/patients?pref_id=1&date_from=20211201&date_to=20211231`,
-      OPTIONS
-    )
-      .then((res) => res.json())
-      .then((data) => data)
-      .catch((err: Error) => {
-        console.error("エラー: ", err);
-      });
-    console.log(data);
+  const getPrefectures = useCallback(async () => {
+    const data: PrefecturesApi = await request(`${BASE_URL}/prefectures`);
     return data;
-  }, []);
+  }, [request]);
+
+  const getPatients = useCallback(
+    async (queries: GetQueries) => {
+      const { prefId, dateFrom, dateTo } = queries;
+      const data: PatientsApi = await request(
+        `${BASE_URL}/patients?pref_id=${prefId}&date_from=${dateFrom}&date_to=${dateTo}`
+      );
+      return data;
+    },
+    [request]
+  );
 
   return {
     getPrefectures,

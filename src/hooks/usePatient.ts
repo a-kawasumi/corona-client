@@ -1,21 +1,34 @@
-import { useEffect, useMemo, useState } from "react";
-import { useApi, PatientsData } from "./useApi";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useApi, PatientsData, GetQueries } from "./useApi";
 import { SeriesOptionsType } from "highcharts";
 import uniq from "lodash.uniq";
+import { useMount } from "./useMount";
+
+const defaultQueries: GetQueries = {
+  prefId: 1,
+  dateFrom: "20211201",
+  dateTo: "20211231",
+};
 
 export const usePatient = () => {
   const { getPatients } = useApi();
   const [patient, setPatient] = useState<PatientsData | null>(null);
+  const isMounted = useMount();
 
-  useEffect(() => {
-    const fetch = async () => {
-      const body = await getPatients();
-      if (body.ok) {
+  const fetchPatients = useCallback(
+    async (queries: GetQueries) => {
+      console.log("fetchPatients", queries);
+      const body = await getPatients(queries);
+      if (body.ok && isMounted()) {
         setPatient(body.data);
       }
-    };
-    fetch();
-  }, [getPatients]);
+    },
+    [getPatients, isMounted]
+  );
+
+  useEffect(() => {
+    fetchPatients(defaultQueries);
+  }, [fetchPatients]);
 
   const graphData = useMemo(() => {
     if (!patient) return null;
@@ -35,6 +48,7 @@ export const usePatient = () => {
   }, [patient]);
 
   return {
+    fetchPatients,
     patient,
     graphData,
   };

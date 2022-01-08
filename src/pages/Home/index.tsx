@@ -9,11 +9,19 @@ const Header = styled.div`
 `;
 
 export const Home: React.VFC = () => {
-  const { graphData } = usePatient();
+  const { graphData, fetchPatients } = usePatient();
 
-  const handleSelect = useCallback((id: number) => {
-    console.log(id);
-  }, []);
+  const handleSelect = useCallback(
+    (id: number) => {
+      fetchPatients({
+        prefId: id,
+        // todo: date search
+        dateFrom: "20211201",
+        dateTo: "20211231",
+      });
+    },
+    [fetchPatients]
+  );
 
   return (
     <div>
