@@ -1,40 +1,40 @@
-import { VFC } from 'react'
-import Highcharts, { SeriesOptionsType, Options } from 'highcharts';
-import HighchartsReact from 'highcharts-react-official';
+import { VFC } from "react";
+import Highcharts, { SeriesOptionsType, Options } from "highcharts";
+import HighchartsReact from "highcharts-react-official";
 
 interface Props {
   data: SeriesOptionsType[];
-  categories: string[]
+  categories: string[];
 }
-export const PatientGraph: VFC<Props> = props => {
-	const { data, categories } = props
+export const PatientGraph: VFC<Props> = (props) => {
+  const { data, categories } = props;
 
   const options: Options = {
     title: {
-      text: '新型コロナウイルス感染者遷移',
+      text: "新型コロナウイルス感染者遷移",
     },
     subtitle: {
-      text: '2021/12/01 ~ 2021/12/31',
+      text: "2021/12/01 ~ 2021/12/31",
     },
     yAxis: {
       title: {
-        align: 'high',
+        align: "high",
         offset: 0,
-        text: '感染者数',
+        text: "感染者数",
         rotation: 0,
         y: -20,
       },
     },
     xAxis: {
-			type: 'datetime',
-      categories
+      type: "datetime",
+      categories,
     },
     legend: {
-      layout: 'vertical',
-      align: 'right',
-      verticalAlign: 'middle',
+      layout: "vertical",
+      align: "right",
+      verticalAlign: "middle",
     },
-		series: data,
+    series: data,
     responsive: {
       rules: [
         {
@@ -43,24 +43,24 @@ export const PatientGraph: VFC<Props> = props => {
           },
           chartOptions: {
             legend: {
-              layout: 'horizontal',
-              align: 'center',
-              verticalAlign: 'bottom',
+              layout: "horizontal",
+              align: "center",
+              verticalAlign: "bottom",
             },
           },
         },
       ],
     },
     lang: {
-      noData: '表示するデータがありません',
+      noData: "表示するデータがありません",
     },
     noData: {
       style: {
-        fontWeight: 'bold',
-        fontSize: '16px',
+        fontWeight: "bold",
+        fontSize: "16px",
       },
     },
   };
 
   return <HighchartsReact highcharts={Highcharts} options={options} />;
-}
+};
