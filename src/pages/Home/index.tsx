@@ -13,6 +13,7 @@ const Selector = styled.div`
 
 const Graph = styled.div`
   position: relative;
+  margin: 0 50px;
 `;
 
 const Calender = styled.div`
@@ -31,8 +32,8 @@ export const Home: React.VFC = () => {
   });
   const [queries, setQueries] = useState<GetQueries>({
     prefId: 1,
-    dateFrom: "20211201",
-    dateTo: "20211231",
+    dateFrom: "2021-12-01",
+    dateTo: "2021-12-31",
   });
 
   useEffect(() => {
@@ -91,7 +92,11 @@ export const Home: React.VFC = () => {
         )}
         {isShowDateRange && (
           <Calender ref={calenderRef}>
-            <DateRangeCalender onSelect={handleSelectDate} />
+            <DateRangeCalender
+              onSelect={handleSelectDate}
+              start={queries.dateFrom}
+              end={queries.dateTo}
+            />
           </Calender>
         )}
       </Graph>

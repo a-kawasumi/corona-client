@@ -15,7 +15,7 @@ const PrefectureGroup = styled.g`
   stroke: #666;
 
   &:hover {
-    fill: #f55e5e;
+    fill: #b0cdf7;
   }
 `;
 

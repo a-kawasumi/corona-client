@@ -26,7 +26,7 @@ export const usePatient = () => {
     const categories = patient.patients.map((p) => p.date);
     const first = categories[0];
     const last = categories.slice(-1)[0];
-    const subtitleText = first === last ? first : `${first}~${last}`;
+    const subtitleText = first === last ? first : `${first} ~ ${last}`;
     const options: SeriesOptionsType[] = [
       {
         type: "line",

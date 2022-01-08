@@ -4,13 +4,15 @@ import { format } from "date-fns";
 
 interface Props {
   onSelect: (startDate: string, endDate: string) => void;
+  start: string;
+  end: string;
 }
 export const DateRangeCalender: VFC<Props> = (props) => {
-  const { onSelect } = props;
+  const { onSelect, start, end } = props;
   const [state, setState] = useState<Range[]>([
     {
-      startDate: new Date("2021-12-01"),
-      endDate: new Date("2021-12-31"),
+      startDate: new Date(start),
+      endDate: new Date(end),
       key: "selection",
     },
   ]);
@@ -18,7 +20,7 @@ export const DateRangeCalender: VFC<Props> = (props) => {
     const { startDate, endDate } = range.selection;
     setState([range.selection]);
     if (startDate && endDate && startDate !== endDate)
-      onSelect(format(startDate, "yyyyMMdd"), format(endDate, "yyyyMMdd"));
+      onSelect(format(startDate, "yyyy-MM-dd"), format(endDate, "yyyy-MM-dd"));
   };
   return (
     <DateRange
