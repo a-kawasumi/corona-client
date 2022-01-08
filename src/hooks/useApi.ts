@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { Prefecture, Api, Patient } from "../types";
 
-const BASE_URL = "http://127.0.0.1:3000/";
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 const MODE: RequestMode = "cors";
 const OPTIONS: RequestInit = {
   method: "GET",
