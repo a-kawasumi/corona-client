@@ -13,7 +13,8 @@ export const usePatient = () => {
     async (queries: GetQueries) => {
       const body = await getPatients(queries);
       if (body.ok && isMounted()) {
-        setPatient(body.data);
+        const patients = body.data.patients;
+        if (patients != null) setPatient(body.data);
       }
     },
     [getPatients, isMounted]
@@ -23,6 +24,9 @@ export const usePatient = () => {
     if (!patient) return null;
     const patients = patient.patients.map((p) => [p.date, p.people]);
     const categories = patient.patients.map((p) => p.date);
+    const first = categories[0];
+    const last = categories.slice(-1)[0];
+    const subtitleText = first === last ? first : `${first}~${last}`;
     const options: SeriesOptionsType[] = [
       {
         type: "line",
@@ -33,6 +37,7 @@ export const usePatient = () => {
     return {
       options,
       categories,
+      subtitleText,
     };
   }, [patient]);
 

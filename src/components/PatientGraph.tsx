@@ -5,16 +5,17 @@ import HighchartsReact from "highcharts-react-official";
 interface Props {
   data: SeriesOptionsType[];
   categories: string[];
+  subtitleText: string;
 }
 export const PatientGraph: VFC<Props> = (props) => {
-  const { data, categories } = props;
+  const { data, categories, subtitleText } = props;
 
   const options: Options = {
     title: {
       text: "新型コロナウイルス感染者遷移",
     },
     subtitle: {
-      text: "2021/12/01 ~ 2021/12/31",
+      text: subtitleText,
     },
     yAxis: {
       title: {

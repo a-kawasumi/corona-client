@@ -86,6 +86,7 @@ export const Home: React.VFC = () => {
           <PatientGraph
             data={graphData.options}
             categories={graphData.categories}
+            subtitleText={graphData.subtitleText}
           />
         )}
         {isShowDateRange && (
