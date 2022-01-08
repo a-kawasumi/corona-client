@@ -42,8 +42,10 @@
   },
   "devDependencies": {
     "@types/lodash.uniq": "^4.5.6",
+    "@types/styled-components": "^5.1.19",
     "highcharts": "^9.3.2",
     "highcharts-react-official": "^3.1.0",
-    "lodash.uniq": "^4.5.0"
+    "lodash.uniq": "^4.5.0",
+    "styled-components": "^5.3.3"
   }
 }
