@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { usePatient } from "../../hooks/usePatient";
+import { GetQueries } from "../../hooks/useApi";
 import { PatientGraph } from "../../components/PatientGraph";
 import { JapanMap } from "../../components/JapanMap";
 import styled from "styled-components";
@@ -28,18 +29,24 @@ export const Home: React.VFC = () => {
   useOutsideClick<HTMLDivElement>(calenderRef, () => {
     setIsShowDateRange(false);
   });
+  const [queries, setQueries] = useState<GetQueries>({
+    prefId: 1,
+    dateFrom: "20211201",
+    dateTo: "20211231",
+  });
 
-  const handleSelect = useCallback(
-    (id: number) => {
-      fetchPatients({
+  useEffect(() => {
+    fetchPatients(queries);
+  }, [queries, fetchPatients]);
+
+  const handleSelect = useCallback((id: number) => {
+    setQueries((prev) => {
+      return {
+        ...prev,
         prefId: id,
-        // todo: date search
-        dateFrom: "20211201",
-        dateTo: "20211231",
-      });
-    },
-    [fetchPatients]
-  );
+      };
+    });
+  }, []);
 
   useEffect(() => {
     const dateEl = document.querySelector(".highcharts-subtitle");
@@ -59,6 +66,16 @@ export const Home: React.VFC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [graphData]);
 
+  const handleSelectDate = useCallback((dateFrom: string, dateTo: string) => {
+    setQueries((prev) => {
+      return {
+        ...prev,
+        dateFrom,
+        dateTo,
+      };
+    });
+  }, []);
+
   return (
     <div>
       <Selector>
@@ -73,7 +90,7 @@ export const Home: React.VFC = () => {
         )}
         {isShowDateRange && (
           <Calender ref={calenderRef}>
-            <DateRangeCalender />
+            <DateRangeCalender onSelect={handleSelectDate} />
           </Calender>
         )}
       </Graph>
